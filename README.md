@@ -6,7 +6,7 @@ This repository is the official implementation of DRIBO. Our implementation is b
 1. Install dm_control with [MuJoCo Pro 2.0](http://www.mujoco.org/);
     ```
     pip install dm_control
-    pip install git+git://github.com/denisyarats/dmc2gym.git
+    pip install git+https://github.com/denisyarats/dmc2gym.git
     ```
 
 2. All of the python dependencies are in the `setup.py` file. They can be installed manually or with the following command:
