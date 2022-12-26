@@ -693,3 +693,11 @@ class DRIBOSacAgent(object):
         torch.save(
             params, '%s/dribo.pt' % (model_dir)
         )
+    def load_DRIBO(self, model_dir, step):
+        a=torch.load(
+            f'{model_dir}/dribo.pt',map_location=self.device
+        )
+        self.DRIBO = a['DRIBO']
+        self.actor = a['actor']
+        self.encoder = a['encoder']
+

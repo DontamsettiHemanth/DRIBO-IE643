@@ -11,7 +11,9 @@ from DRIBO.video import VideoRecorder
 
 from DRIBO.DRIBO_sac import DRIBOSacAgent
 from DRIBO import pytorch_util as ptu
-
+import warnings
+warnings.filterwarnings("ignore", category=DeprecationWarning)
+warnings.filterwarnings("ignore", category=UserWarning)
 
 def parse_args():
     parser = argparse.ArgumentParser()
@@ -75,6 +77,8 @@ def parse_args():
     parser.add_argument('--save_video', default=False, action='store_true')
     parser.add_argument('--save_model', default=False, action='store_true')
     parser.add_argument('--detach_encoder', default=False, action='store_true')
+    parser.add_argument('--load_model', default=False, action='store_true')
+    parser.add_argument('--load_model_dir', default=None, type=str)
 
     # noisy bg
     parser.add_argument('--noisy_bg', default=False, action='store_true')
@@ -182,11 +186,10 @@ def main():
     # record the pre transform image size for translation
     # pre_image_size = args.pre_transform_image_size
 
-    # resource_files = '~/packages/AdvGen/Invariant_RL/distractors/*.mp4'
-    resource_files = '~/packages/AdvGen/kinetics-downloader' + \
-        '/dataset/train/arranging_flowers/*.mp4'
-    eval_resource_files = '~/packages/AdvGen/kinetics-downloader' + \
-        '/dataset/test/*.mp4'
+    resource_files = '/home/hemanthdontamsetti/Documents/DDsem9/ie 643/project/kinetics-downloader/dataset/train/unboxing/*.mp4'
+    #resource_files = '~/Documents/DDsem9/ie\ 643/project/kinetics-downloader/dataset/train/arranging_flowers/*.mp4'
+    # eval_resource_files = '~/Documents/DDsem9/ie 643/project/kinetics-downloader/dataset/valid/arranging_flowers/*.mp4'
+    eval_resource_files = '~/Documents/DDsem9/ie 643/project/kinetics-downloader/dataset/test/*.mp4'
     img_source = 'video'
     total_frames = 1000
     if args.noisy_bg:
@@ -271,7 +274,6 @@ def main():
     video_dir = utils.make_dir(os.path.join(args.work_dir, 'video'))
     model_dir = utils.make_dir(os.path.join(args.work_dir, 'model'))
     buffer_dir = utils.make_dir(os.path.join(args.work_dir, 'buffer'))
-
     video = VideoRecorder(video_dir if args.save_video else None)
 
     with open(os.path.join(args.work_dir, 'args.json'), 'w') as f:
@@ -314,7 +316,12 @@ def main():
     episode, episode_reward, done = 0, 0, True
     max_mean_ep_reward = 0
     start_time = time.time()
-
+    ## load model if given
+    if args.load_model:
+        print(f'########## loading pretrained model from {args.load_model_dir} ###########')
+        agent.load_DRIBO(args.load_model_dir,0)
+        print('-------- loaded pretrained model ------------')
+    
     for step in range(args.num_train_steps):
         # evaluate agent periodically
 

@@ -1,3 +1,4 @@
+train_steps=$((890000/8)) 
 CUDA_VISIBLE_DEVICES=0 python train.py \
     --domain_name cheetah \
     --task_name run \
